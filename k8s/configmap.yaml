@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+
+metadata:
+  name: orders-api-config
+
+data:
+  DB_PATH: "orders.db"

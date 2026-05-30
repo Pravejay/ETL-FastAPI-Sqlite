@@ -360,7 +360,7 @@ Logging includes:
 ## Project Structure
 
 ```text
-project/
+sap-test/
 │
 ├── app/
 │   ├── __init__.py
