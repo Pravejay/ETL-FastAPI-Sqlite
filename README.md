@@ -296,7 +296,7 @@ GET /orders/recent?days=7
 
 ## Metrics
 
-Prometheus metrics endpoint implemented using prometheus-fastapi-instrumentator:
+Prometheus metrics endpoint implemented using `prometheus-fastapi-instrumentator`:
 
 ```http
 GET /metrics
@@ -409,7 +409,7 @@ Kubernetes manifests:
   - Service (ClusterIP).
   - ConfigMap for configurable parameters (e.g., DB path).
 
-Successfully built and run Docker images using `GitHub Workflow Actions` as I could not run the Docker locally on laptop (using office laptop and it restricts Docker).
+**Successfully built and run Docker images using `GitHub Workflow Actions` as I could not run the Docker locally on laptop (using office laptop and it restricts Docker).**
 
 ---
 # Part 4: AI-Augmented Query Layer + Architectural Extension
@@ -692,7 +692,9 @@ the ETL pipeline automatically:
 3. Rebuilds the FAISS index
 
 This ensures semantic search always reflects the latest data.
+
 **`Handling Concurrency during rebuild`**
+
 To handle the concurrency use-cases, I would use Reentrant Lock before rebuilding the index or searching for orders.
 Additionally, we could build an alternative index parallely and swap with the global index upon rebuild completion.
 
@@ -855,7 +857,7 @@ SUCCESS
 
 Answer
 ↓
-Total revenue: 12,540.50
+Total revenue: 12540.50
 ```
 
 This demonstrates automatic self-correction of LLM-generated SQL.
@@ -1041,5 +1043,6 @@ Trade-off accepted:
 
 This choice prioritizes security and enterprise compliance over infrastructure efficiency.
 
-Final note:
+**`Final note`**:
+
 The highest-leverage architectural decision was choosing deployment-level isolation instead of application-level tenant filtering. Each tenant (or tenant region) owns its own database, vector index, and AI inference path. This significantly reduces the risk of cross-tenant data leakage through SQL execution, vector retrieval, prompt construction, caching, and logging. The trade-off is increased infrastructure and operational cost, but I accepted that trade-off because the stated requirements (EU, US, and KSA data residency) indicate that compliance, auditability, and security are more important than maximizing infrastructure efficiency.
