@@ -1,0 +1,32 @@
+[
+  {
+    "order_id": 1001,
+    "customer_id": "C123",
+    "amount_usd": 200,
+    "order_date": "2020-01-01"
+  },
+  {
+    "order_id": 1002,
+    "customer_id": "C124",
+    "amount_usd": 165,
+    "order_date": "2020-01-02"
+  },
+  {
+    "order_id": 1003,
+    "customer_id": "C200",
+    "amount_usd": 500,
+    "order_date": "2026-05-28"
+  },
+  {
+    "order_id": 1004,
+    "customer_id": "C201",
+    "amount_usd": 400,
+    "order_date": "2026-05-25"
+  },
+  {
+    "order_id": 1005,
+    "customer_id": "C123",
+    "amount_usd": 800,
+    "order_date": "2026-05-29"
+  }
+]

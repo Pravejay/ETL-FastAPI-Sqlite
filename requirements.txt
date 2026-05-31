@@ -4,3 +4,10 @@ uvicorn
 pydantic
 prometheus-fastapi-instrumentator
 cachetools
+langgraph
+langchain
+google-genai
+sqlglot
+sentence-transformers
+faiss-cpu
+numpy

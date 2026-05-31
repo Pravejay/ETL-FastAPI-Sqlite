@@ -6,7 +6,9 @@ import csv
 import os
 import sqlite3
 from decimal import Decimal
-from utils import get_connection, normalize_date, normalize_amount, create_orders_table, setup_logger
+
+from app.semantic_search import rebuild_index
+from app.utils import get_connection, normalize_date, normalize_amount, create_orders_table, setup_logger
 
 # These constants could be moved to a config file or environment variables in a real-world application.
 DB_PATH = os.getenv("DB_PATH", "orders.db")
@@ -79,6 +81,11 @@ def process_orders_csv(csv_path: str):
     logger.info(f"ETL Summary: Processed {processed_rows} rows, Inserted {inserted_rows} rows, "
                 f"Skipped {skipped_rows} rows, Duplicates {duplicate_rows} rows")
     logger.info("ETL pipeline completed successfully")
+
+    # For AI agent to perform semantic search.
+    # Rebuild the FAISS index after loading new data into the database to ensure semantic search is up-to-date.
+    rebuild_index(DB_PATH)
+    logger.info("FAISS index rebuilt successfully after ETL load")
 
 
 # Function to show statistics about the orders in the database
