@@ -10,8 +10,10 @@ from prometheus_fastapi_instrumentator import Instrumentator
 
 from cachetools import TTLCache
 
-from .models import OrderResponse, StatsResponse
-from .utils import get_connection, setup_logger
+from app.semantic_search import load_index, search_orders
+from app.models import OrderResponse, StatsResponse, AskRequest, AskResponse, SemanticSearchResult
+from app.utils import get_connection, setup_logger
+from app.langgraph_agent import agent
 
 # FastAPI application instance
 app = FastAPI(title="Orders API", version="1.0.0")
@@ -136,3 +138,43 @@ def get_recent_orders(days: int = Query(..., gt=0, le=365)):
     logger.info(f"Returning recent orders from the last {days} days.")
     return [dict(row) for row in rows]
 
+########################### AI Agent Endpoints ###########################
+
+# Load the FAISS index and metadata into memory at application startup.
+@app.on_event("startup")
+def startup():
+    load_index()
+
+@app.post("/orders/ask", response_model=AskResponse)
+def ask_order_question(request: AskRequest):
+    # Ask natural language questions about the orders data
+    # and the AI agent will generate a SQL query to answer the question based on the schema context.
+    result = agent.invoke(
+        {
+            "question": request.question,
+            "sql": "",
+            "rows": [],
+            "answer": "",
+            "error": None,
+            "retries": 0
+        }
+    )
+
+    if result.get("error") == "UNANSWERABLE":
+        raise HTTPException(
+            status_code=400,
+            detail=("Question cannot be answered from schema context.")
+        )
+
+    return AskResponse(
+        answer=result["answer"],
+        sql_used=result["sql"],
+        rows=result["rows"],
+        retries=result["retries"]
+    )
+
+# This allows users to search for orders using natural language queries
+# and retrieves the most relevant orders based on semantic similarity.
+@app.get("/orders/semantic_search", response_model=list[SemanticSearchResult])
+def semantic_search(q: str, top_k: int = 5):
+    return search_orders(q, top_k)
